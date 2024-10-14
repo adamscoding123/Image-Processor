@@ -5,10 +5,11 @@ import javafx.scene.image.PixelReader;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import se.kth.mmhaa.demo1.model.HistogramCalc;
+import se.kth.mmhaa.demo1.util.FileIO;
 import se.kth.mmhaa.demo1.model.ImageModel;
 import se.kth.mmhaa.demo1.view.ImageDisplayView;
-import se.kth.mmhaa.demo1.imageprocessing.Grayscaling;
-import se.kth.mmhaa.demo1.imageprocessing.Contrasting;
+import se.kth.mmhaa.demo1.model.ImageProcessor;
+import se.kth.mmhaa.demo1.model.IProcessor;
 
 import java.io.File;
 
@@ -16,6 +17,8 @@ public class ImageController {
     private ImageModel model;
     private ImageDisplayView view;
     private Stage stage;
+
+    private int[][] originalImageData;
 
     public ImageController(ImageModel model, ImageDisplayView view, Stage stage) {
         this.model = model;
@@ -53,29 +56,15 @@ public class ImageController {
 
             view.updateImageDisplay(image);
 
-            model.setImageData(getImagePixelData(image));
+            originalImageData = FileIO.imageToPixelArray(image);
+            model.setImageData(FileIO.imageToPixelArray(image));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // Hämta pixeldata från bilden
-    private int[][] getImagePixelData(Image image) {
-        int width = (int) image.getWidth();
-        int height = (int) image.getHeight();
-        int[][] pixelData = new int[height][width];
 
-        PixelReader pixelReader = image.getPixelReader();
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                pixelData[y][x] = pixelReader.getArgb(x, y); // argb value som är alpha, red, green, blue
-            } // färg i digital grafik, image processing
-        }
-        return pixelData;
-    }
-
-    // Visa histogrammet
     public void showHistogram() {
         int[][] pixelData = model.getImageData();
 
@@ -96,15 +85,21 @@ public class ImageController {
 
         view.showHistogramChart(histogramData);
     }
-
-    public void handleGrayscale(double grayscaleFactor) {
-        Grayscaling grayscaling = new Grayscaling();
-        grayscaling.applyGrayscaleEffect(view.getImageView(), grayscaleFactor);
+    public void applyGrayscale(double greyFactor) {
+        IProcessor processor = new ImageProcessor();
+        int[][] originalImg = model.getImageData();
+        int[][] processedImg = ((ImageProcessor) processor).greyscaleProcessor(originalImageData, greyFactor);
+        model.setImageData(processedImg);
+        view.updateImageDisplay(FileIO.pixelArrayToImage(processedImg));
     }
 
-    public void handleContrasting(double contrastFactor) {
-        Contrasting contrasting = new Contrasting(contrastFactor);
-        contrasting.applyContrastEffect(view.getImageView());
-
+    public void applyContrast(double contrastFactor) {
+        IProcessor processor = new ImageProcessor();
+        int[][] originalImg = model.getImageData();
+        int[][] processedImg = ((ImageProcessor) processor).contrastProcessor(originalImageData, contrastFactor);
+        model.setImageData(processedImg);
+        view.updateImageDisplay(FileIO.pixelArrayToImage(processedImg));
     }
+
+
 }

@@ -37,10 +37,10 @@ public class MainApp extends Application {
             view.getRootPane().setBottom(imageProcessingUI.getSliderContainer()); // add slider container to rootpane view (bottom)
         });
 
-        MenuItem contrastItem = new MenuItem("Adjust Contrast");
-        contrastItem.setOnAction(e -> {
-            imageProcessingUI.showContrastSlider(controller); // process and show contrast slider
-            view.getRootPane().setBottom(imageProcessingUI.getSliderContainer()); // add slider container to rootpane view (bottom)
+        MenuItem contrastItem = new MenuItem("Contrast");
+        contrastItem.setOnAction(e->{
+            imageProcessingUI.showContrastSlider(controller);
+            view.getRootPane().setBottom(imageProcessingUI.getSliderContainer());
         });
 
         imageProcessingMenu.getItems().addAll(grayscaleItem, contrastItem);

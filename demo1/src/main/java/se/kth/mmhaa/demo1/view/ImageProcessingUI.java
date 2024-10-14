@@ -30,36 +30,34 @@ public class ImageProcessingUI {
         grayscaleSlider.setBlockIncrement(0.1);
         grayscaleSlider.setSnapToTicks(true);
 
-        grayscaleSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
 
-            controller.handleGrayscale(newValue.doubleValue());
+        grayscaleSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("Grayscale Strength: " + newValue.doubleValue()); // For debugging
+            controller.applyGrayscale(newValue.doubleValue());
         });
+
 
         sliderContainer.getChildren().add(grayscaleSlider);
     }
-
-
     public void showContrastSlider(ImageController controller) {
-
         sliderContainer.getChildren().clear();
-
 
         Label contrastLabel = new Label("Adjust Contrast");
         sliderContainer.getChildren().add(contrastLabel);
-
-        Slider contrastSlider = new Slider(-1.0, 1.0, 0.0);
+        Slider contrastSlider = new Slider(0.0, 1.0, 0.0);
         contrastSlider.setShowTickMarks(true);
         contrastSlider.setShowTickLabels(true);
         contrastSlider.setMajorTickUnit(0.2);
         contrastSlider.setBlockIncrement(0.1);
         contrastSlider.setSnapToTicks(true);
-
-
         contrastSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-
-            controller.handleContrasting(newValue.doubleValue());
+            System.out.println("Contrast Strength: " + newValue.doubleValue()); // For debugging
+            controller.applyContrast(newValue.doubleValue());
         });
+
 
         sliderContainer.getChildren().add(contrastSlider);
     }
+
+
 }

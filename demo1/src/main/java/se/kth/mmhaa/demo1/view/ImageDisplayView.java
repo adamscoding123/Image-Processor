@@ -1,6 +1,5 @@
 package se.kth.mmhaa.demo1.view;
 
-import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -68,7 +67,7 @@ public class ImageDisplayView {
         }
     }
 
-    public ImageView getImageView() {
+    public ImageView getImageView(){
         return imageView;
     }
 
@@ -86,8 +85,11 @@ public class ImageDisplayView {
 
         // BarChart<String, Number> histogramChart = new BarChart<>(xAxis, yAxis);
         LineChart<String, Number> histogramChart = new LineChart<>(xAxis, yAxis);
-        histogramChart.setTitle("Image Histogram");
         histogramChart.setCreateSymbols(false);
+        histogramChart.setTitle("Image Histogram");
+
+        XYChart.Series<String, Number> alphaSeries = new XYChart.Series<>();
+        alphaSeries.setName("Alpha");
 
         XYChart.Series<String, Number> redSeries = new XYChart.Series<>();
         redSeries.setName("Red");

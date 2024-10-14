@@ -2,6 +2,7 @@ module se.kth.mmhaa.demo1 {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.graphics;
+    requires java.desktop;
     //requires javafx.swing;
 
     opens se.kth.mmhaa.demo1;
