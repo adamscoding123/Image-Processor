@@ -16,8 +16,9 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         ImageModel model = new ImageModel();
+        ImageModel save = new ImageModel();
         ImageDisplayView view = new ImageDisplayView();
-        ImageController controller = new ImageController(model, view, primaryStage);
+        ImageController controller = new ImageController(model,save, view, primaryStage);
         view.setController(controller);
 
         imageProcessingUI = new ImageProcessingUI();
@@ -29,6 +30,7 @@ public class MainApp extends Application {
         MenuItem exitItem = new MenuItem("Exit");
         exitItem.setOnAction(e -> primaryStage.close());
         fileMenu.getItems().addAll(openImageItem, exitItem);
+
 
         Menu imageProcessingMenu = new Menu("Image Processing");
         MenuItem grayscaleItem = new MenuItem("Grayscale");
@@ -43,7 +45,13 @@ public class MainApp extends Application {
             view.getRootPane().setBottom(imageProcessingUI.getSliderContainer());
         });
 
-        imageProcessingMenu.getItems().addAll(grayscaleItem, contrastItem);
+        MenuItem windowLevel = new MenuItem("Window/Level");
+        windowLevel.setOnAction(e->{
+            imageProcessingUI.windowLevelSlider(controller);
+            view.getRootPane().setBottom(imageProcessingUI.getSliderContainer());
+        });
+
+        imageProcessingMenu.getItems().addAll(grayscaleItem, contrastItem, windowLevel);
 
         menuBar.getMenus().addAll(fileMenu, imageProcessingMenu);
 

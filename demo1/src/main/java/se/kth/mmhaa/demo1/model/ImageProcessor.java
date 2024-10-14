@@ -7,45 +7,9 @@ interface ProcessorCallback {
     Color onCycle(int r,int g, int b);
 }
 
-public class ImageProcessor implements IProcessor {
+public class ImageProcessor {
 
-
-    @Override
-    public int[][] processImage(int[][] originalImg) {
-        return new int[0][];
-    }
-
-    public int[][] greyscaleProcessor(int[][] originalImg, double greyStrength) {
-       ProcessorCallback callback = new ProcessorCallback() {
-           @Override
-           public Color onCycle(int r, int g, int b) {
-               int gray = (r + g + b) / 3;
-               int finalRed = (int) (r * (1 - greyStrength) + gray * greyStrength);
-               int finalGreen = (int) (g * (1 - greyStrength) + gray * greyStrength);
-               int finalBlue = (int) (b * (1 - greyStrength) + gray * greyStrength);
-               return new Color(finalRed,finalGreen,finalBlue);
-           }
-       };
-
-        return process(originalImg, callback);
-    }
-
-    public int[][] contrastProcessor(int[][] originalImg, double contrastStrength) {
-        ProcessorCallback callback = new ProcessorCallback() {
-            @Override
-            public Color onCycle(int r, int g, int b) {
-                int finalRed = (int)(((r - 128) * contrastStrength) + 128);
-                int finalGreen = (int)(((g - 128) * contrastStrength) + 128);
-                int finalBlue = (int)(((b - 128) * contrastStrength) + 128);
-                return new Color(finalRed, finalGreen, finalBlue);
-            }
-        };
-        //... logic contrast
-        return process(originalImg, callback);
-    }
-
-
-    public int[][] process(int[][] originalImg, ProcessorCallback callback) {
+    public static int[][] process(int[][] originalImg, ProcessorCallback callback) {
         int height = originalImg.length;
         int width = originalImg[0].length;
         int[][] img = new int[height][width];

@@ -5,17 +5,17 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 public class FileIO {
 
     // Läs en bildfil och returnera den som ett Image-objekt
-    public static Image readImage(File file) throws IOException {
-        try (FileInputStream inputStream = new FileInputStream(file)) {
-            return new Image(inputStream);
-        }
+    public static Image readImage(File file) {
+        return new Image(file.toURI().toString());
+    }
+
+    public static void saveImage(File file, int[][] image) {
+        // Apply before saving!
+        // model.setImageData(processedImg);
+        // ... save file
     }
 
     public static int[][] imageToPixelArray(Image image) {

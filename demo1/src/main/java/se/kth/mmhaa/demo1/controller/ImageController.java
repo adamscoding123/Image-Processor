@@ -4,24 +4,23 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import se.kth.mmhaa.demo1.model.HistogramCalc;
+import se.kth.mmhaa.demo1.model.*;
 import se.kth.mmhaa.demo1.util.FileIO;
-import se.kth.mmhaa.demo1.model.ImageModel;
 import se.kth.mmhaa.demo1.view.ImageDisplayView;
-import se.kth.mmhaa.demo1.model.ImageProcessor;
-import se.kth.mmhaa.demo1.model.IProcessor;
 
 import java.io.File;
 
+
 public class ImageController {
     private ImageModel model;
+    private ImageModel save;
     private ImageDisplayView view;
     private Stage stage;
 
-    private int[][] originalImageData;
 
-    public ImageController(ImageModel model, ImageDisplayView view, Stage stage) {
+    public ImageController(ImageModel model, ImageModel save, ImageDisplayView view, Stage stage) {
         this.model = model;
+        this.save = save;
         this.view = view;
         this.stage = stage;
     }
@@ -45,19 +44,17 @@ public class ImageController {
             System.out.println("Selected file: " + file.getAbsolutePath());
 
             // Ladda bilden
-            Image image = new Image(file.toURI().toString());
-
+            Image image = FileIO.readImage(file);
             if (image.isError()) {
                 System.out.println("Error loading image: " + image.getException());
                 return;
             }
-
             System.out.println("Image loaded successfully!");
 
             view.updateImageDisplay(image);
-
-            originalImageData = FileIO.imageToPixelArray(image);
-            model.setImageData(FileIO.imageToPixelArray(image));
+            var imgData = FileIO.imageToPixelArray(image);
+            model.setImageData(imgData);
+            save.setImageData(imgData);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,40 +63,39 @@ public class ImageController {
 
 
     public void showHistogram() {
-        int[][] pixelData = model.getImageData();
+        int[][] pixelData = save.getImageData();
 
         if (pixelData == null) {
             System.out.println("No image loaded. Please load an image first.");
             return;
         }
         int[][] histogramData = HistogramCalc.calculateHistogram(pixelData);
-        // Debugging: Print histogram data
-        // System.out.println("Histogram Data:");
-        // for (int i = 0; i < histogramData.length; i++) {
-        // System.out.print("Channel " + i + ": ");
-        // for (int j = 0; j < histogramData[i].length; j++) {
-        // System.out.print(histogramData[i][j] + " ");
-        // }
-        // System.out.println();
-        // }
-
         view.showHistogramChart(histogramData);
     }
-    public void applyGrayscale(double greyFactor) {
-        IProcessor processor = new ImageProcessor();
+
+    public void applyEffect(IProcessor processor) {
         int[][] originalImg = model.getImageData();
-        int[][] processedImg = ((ImageProcessor) processor).greyscaleProcessor(originalImageData, greyFactor);
-        model.setImageData(processedImg);
+        int[][] processedImg = processor.processImage(originalImg);
+        save.setImageData(processedImg);
         view.updateImageDisplay(FileIO.pixelArrayToImage(processedImg));
+    }
+
+    public void applyGrayscale(double greyFactor) {
+        var processor = new GreyscaleProcessor();
+        processor.setStrength(greyFactor);
+        applyEffect(processor);
     }
 
     public void applyContrast(double contrastFactor) {
-        IProcessor processor = new ImageProcessor();
-        int[][] originalImg = model.getImageData();
-        int[][] processedImg = ((ImageProcessor) processor).contrastProcessor(originalImageData, contrastFactor);
-        model.setImageData(processedImg);
-        view.updateImageDisplay(FileIO.pixelArrayToImage(processedImg));
+        var processor = new ContrastProcessor();
+        processor.setStrength(contrastFactor);
+        applyEffect(processor);
     }
 
-
+    public void applyWindowLevel(int windowF, int levelF){
+        var processor = new WindowLevelProcessor();
+        processor.setWindow(windowF);
+        processor.setLevel(levelF);
+        applyEffect(processor);
+    }
 }
