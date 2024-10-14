@@ -2,6 +2,7 @@ package se.kth.mmhaa.demo1.view;
 
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.TabPane;
@@ -67,13 +68,13 @@ public class ImageDisplayView {
         }
     }
 
-    public ImageView getImageView(){
+    public ImageView getImageView() {
         return imageView;
     }
 
     // Show the histogram
     public void showHistogramChart(int[][] histogramData) {
-        if (histogramData == null || histogramData.length != 4 || histogramData[0].length != 256) {
+        if (histogramData == null || histogramData.length != 3 || histogramData[0].length != 256) {
             System.out.println("Invalid histogram data.");
             return;
         }
@@ -83,11 +84,10 @@ public class ImageDisplayView {
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel("Count");
 
-        BarChart<String, Number> histogramChart = new BarChart<>(xAxis, yAxis);
+        // BarChart<String, Number> histogramChart = new BarChart<>(xAxis, yAxis);
+        LineChart<String, Number> histogramChart = new LineChart<>(xAxis, yAxis);
         histogramChart.setTitle("Image Histogram");
-
-        XYChart.Series<String, Number> alphaSeries = new XYChart.Series<>();
-        alphaSeries.setName("Alpha");
+        histogramChart.setCreateSymbols(false);
 
         XYChart.Series<String, Number> redSeries = new XYChart.Series<>();
         redSeries.setName("Red");
@@ -98,15 +98,13 @@ public class ImageDisplayView {
         XYChart.Series<String, Number> blueSeries = new XYChart.Series<>();
         blueSeries.setName("Blue");
 
-
-        for (int i=0; i<64; i+=4 ) {
-            alphaSeries.getData().add(new XYChart.Data<>(String.valueOf(i), histogramData[0][i]));
-            redSeries.getData().add(new XYChart.Data<>(String.valueOf(i), histogramData[1][i]));
-            greenSeries.getData().add(new XYChart.Data<>(String.valueOf(i), histogramData[2][i]));
-            blueSeries.getData().add(new XYChart.Data<>(String.valueOf(i), histogramData[3][i]));
+        for (int i = 0; i < 256; i += 4) {
+            redSeries.getData().add(new XYChart.Data<>(String.valueOf(i), histogramData[0][i]));
+            greenSeries.getData().add(new XYChart.Data<>(String.valueOf(i), histogramData[1][i]));
+            blueSeries.getData().add(new XYChart.Data<>(String.valueOf(i), histogramData[2][i]));
         }
 
-        histogramChart.getData().addAll(alphaSeries, redSeries, greenSeries, blueSeries);
+        histogramChart.getData().addAll(redSeries, greenSeries, blueSeries);
         histogramPane.setCenter(histogramChart); // Correct place to show the histogram
         System.out.println("Histogram displayed successfully.");
     }
