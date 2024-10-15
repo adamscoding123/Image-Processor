@@ -11,6 +11,8 @@ import se.kth.mmhaa.demo1.controller.ImageController;
  */
 public class ImageProcessingUI {
     private VBox sliderContainer;
+    private double windowValue = 256.0;
+    private double levelValue = 128.0;
 
     /**
      * Constructs a new ImageProcessingUI, initializing the slider container.
@@ -98,7 +100,7 @@ public class ImageProcessingUI {
         sliderContainer.getChildren().clear();
         createAndShowSlider(controller, "Adjust Grayscale", 0.0, 1.0, 0.0, 0.2,
                                     0.1, true, true, true,
-                (value, ctrl) -> ctrl.applyGrayscale(value));
+                (value, controllerAction) -> controllerAction.applyGrayscale(value));
     }
 
     /**
@@ -110,7 +112,7 @@ public class ImageProcessingUI {
         sliderContainer.getChildren().clear();
         createAndShowSlider(controller, "Adjust Contrast", 0.0, 1.0, 0.0, 0.2,
                                     0.1, true, true, true,
-                                    (value, ctrl) -> ctrl.applyContrast(value));
+                                    (value, controllerAction) -> controllerAction.applyContrast(value));
     }
 
     /**
@@ -123,10 +125,14 @@ public class ImageProcessingUI {
 
         createAndShowSlider(controller, "Adjust Window", 0.0, 255.0, 128.0, 1.0,
                                         1.0, true, true, true,
-                                        (value, ctrl) -> ctrl.applyWindowLevel((int) value, (int) value));
+                                        (value, controllerAction) ->{
+                                        windowValue=value; controllerAction.applyWindowLevel((int)windowValue, (int)levelValue);
+                                        });
 
         createAndShowSlider(controller, "Adjust Level", 0.0, 255.0, 128.0, 1.0,
                                     1.0, true, true, true,
-                                        (value, ctrl) -> ctrl.applyWindowLevel((int) value, (int) value));
+                                        (value, controllerAction) ->{
+                                            levelValue=value; controllerAction.applyWindowLevel((int)windowValue, (int)levelValue);
+                                        });
     }
 }
