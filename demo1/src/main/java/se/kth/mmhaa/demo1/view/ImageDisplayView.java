@@ -11,6 +11,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import se.kth.mmhaa.demo1.controller.ImageController;
 
+/**
+ * The ImageDisplayView class represents the view component - MVC (Model-View-Controller)
+ * It is responsible for displaying the image and histogram, and it interacts with the ImageController.
+ */
 public class ImageDisplayView {
     private ImageView imageView;
     private TabPane tabPane;
@@ -19,6 +23,10 @@ public class ImageDisplayView {
     private ImageController controller;
     private BorderPane rootPane;
 
+    /**
+     * Constructs a new ImageDisplayView that sets up the display of the image and histogram.
+     * The view is divided into two tabs: one for displaying the image and another for the histogram.
+     */
     public ImageDisplayView() {
         rootPane = new BorderPane();
 
@@ -27,9 +35,8 @@ public class ImageDisplayView {
         imagePane = new BorderPane();
         imagePane.setCenter(imageView);
 
-        histogramPane = new BorderPane();
-
         tabPane = new TabPane();
+        histogramPane = new BorderPane();
 
         Tab imageTab = new Tab("Show Image");
         imageTab.setContent(imagePane);
@@ -40,7 +47,6 @@ public class ImageDisplayView {
         histogramTab.setClosable(false);
 
         tabPane.getTabs().addAll(imageTab, histogramTab);
-
         rootPane.setCenter(tabPane);
 
         histogramTab.setOnSelectionChanged(event -> {
@@ -50,14 +56,26 @@ public class ImageDisplayView {
         });
     }
 
+    /**
+     * Sets the ImageController for this view, allowing it to communicate with the controller.
+     * @param controller associated with this view
+     */
     public void setController(ImageController controller) {
         this.controller = controller;
     }
 
+    /**
+     * Returns the root pane of this view, which contains the layout for displaying the image and histogram.
+     * @return the root BorderPane of the view
+     */
     public BorderPane getRootPane() {
         return rootPane;
     }
 
+    /**
+     * Updates the image displayed in the view.
+     * @param image the Image object to display
+     */
     public void updateImageDisplay(Image image) {
         if (image != null) {
             imageView.setImage(image);
@@ -67,10 +85,20 @@ public class ImageDisplayView {
         }
     }
 
+    /**
+     * Returns the ImageView component that is used to display the image.
+     * @return the ImageView used to display the image
+     */
     public ImageView getImageView(){
         return imageView;
     }
 
+    /**
+     * Displays the histogram chart based on histogram data
+     * The histogram shows the distribution of pixel intensities for the color channels
+     * @param histogramData a 2D array containing the histogram data, where each row is a color channel
+     *                      and each column represents intensity values
+     */
     // Show the histogram
     public void showHistogramChart(int[][] histogramData) {
         if (histogramData == null || histogramData.length != 3 || histogramData[0].length != 256) {

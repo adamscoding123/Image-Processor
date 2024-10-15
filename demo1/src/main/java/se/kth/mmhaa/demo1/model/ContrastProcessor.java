@@ -2,6 +2,10 @@ package se.kth.mmhaa.demo1.model;
 
 import java.awt.*;
 
+/**
+ * This class is responsible for processing the original uploaded image
+ * - it alters the contrast depending on a strength factor which is taken as an argument
+ */
 public class ContrastProcessor implements IProcessor {
     double strength;
 
@@ -9,6 +13,10 @@ public class ContrastProcessor implements IProcessor {
         this.strength = 1.0;
     }
 
+    /**
+     * Applies a contrast strength to the image
+     * @param strength the strength of the contrast to apply
+     */
     public void setStrength(double strength) {
         this.strength = strength;
     }
