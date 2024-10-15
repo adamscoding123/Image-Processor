@@ -5,7 +5,8 @@ import java.awt.*;
 /**
  * The WindowLevelProcessor class processes an image by adjusting its
  * contrast and brightness using window leveling techniques.
- * It alters the contrast depending on a strength factor, which is taken as an argument.
+ * It alters the contrast depending on a strength factor, which is taken as an
+ * argument.
  */
 public class WindowLevelProcessor implements IProcessor {
     private int level;
@@ -23,14 +24,16 @@ public class WindowLevelProcessor implements IProcessor {
     /**
      * Sets the contrast strength level for the processor.
      *
-     * @param level the strength of levelling to apply, where higher values represent stronger levelling.
+     * @param level the strength of levelling to apply, where higher values
+     *              represent stronger levelling.
      */
     public void setLevel(int level) {
         this.level = level;
     }
 
     /**
-     * Sets the window size for the processor, which controls the range of pixel intensities.
+     * Sets the window size for the processor, which controls the range of pixel
+     * intensities.
      *
      * @param window the window range to apply, controlling the contrast range.
      */
@@ -40,25 +43,23 @@ public class WindowLevelProcessor implements IProcessor {
 
     /**
      * Processes the given image by applying window leveling to each pixel.
-     * The contrast and brightness are adjusted based on the specified window and level settings.
+     * The contrast and brightness are adjusted based on the specified window and
+     * level settings.
      *
      * @param image the original image represented as a 2D array of pixel values.
-     * @return a new 2D array representing the processed image with adjusted contrast and brightness.
+     * @return a new 2D array representing the processed image with adjusted
+     *         contrast and brightness.
      */
     @Override
     public int[][] processImage(int[][] image) {
-        ProcessorCallback callback = new ProcessorCallback() {
-            @Override
-            public Color onCycle(int r, int g, int b) {
-                int low = level - window / 2;
-                int high = level + window / 2;
-                int finalRed = windowLevelToPixel(r, low, high);
-                int finalGreen = windowLevelToPixel(g, low, high);
-                int finalBlue = windowLevelToPixel(b, low, high);
-                return new Color(finalRed, finalGreen, finalBlue);
-            }
-        };
-        return ImageProcessor.process(image, callback);
+        return ImageProcessor.process(image, (r, g, b) -> {
+            int low = level - window / 2;
+            int high = level + window / 2;
+            int finalRed = windowLevelToPixel(r, low, high);
+            int finalGreen = windowLevelToPixel(g, low, high);
+            int finalBlue = windowLevelToPixel(b, low, high);
+            return new Color(finalRed, finalGreen, finalBlue);
+        });
     }
 
     /**
